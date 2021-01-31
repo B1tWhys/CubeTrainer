@@ -15,22 +15,24 @@ class TimerWidget extends StatefulWidget {
 
 class _TimerWidgetState extends State<TimerWidget> {
   Stream<Duration> _timeStream;
+  StreamController<Duration> _streamController;
+  FocusNode _node;
+  Timer _timer;
+  bool isRunning;
 
   _TimerWidgetState(Duration interval) {
-    StreamController<Duration> streamController;
-    Timer timer;
     Stopwatch stopwatch;
 
     void sendTime(_) {
-      streamController.add(stopwatch.elapsed);
+      _streamController.add(stopwatch.elapsed);
     }
 
     void startTimer() {
-      timer = Timer.periodic(interval, sendTime);
+      _timer = Timer.periodic(interval, sendTime);
     }
 
     void stopTimer() {
-      timer.cancel();
+      _timer.cancel();
     }
 
     void resetTimer() {
@@ -39,7 +41,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       sendTime(stopwatch.elapsed);
     }
 
-    streamController = StreamController(
+    _streamController = StreamController(
       onListen: () {
         resetTimer();
         startTimer();
@@ -49,7 +51,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       onCancel: resetTimer,
     );
 
-    _timeStream = streamController.stream;
+    _timeStream = _streamController.stream;
   }
 
   String formatDuration(Duration d) {
@@ -58,15 +60,41 @@ class _TimerWidgetState extends State<TimerWidget> {
     return "$sec.$ms";
   }
 
+  void handleKeyPress(RawKeyEvent event) {
+    print("Raw key event: $event");
+    _timer.cancel();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _node = FocusNode(debugLabel: 'Timer');
+  }
+
+  @override
+  void dispose() {
+    _streamController.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: StreamBuilder(
+      child: RawKeyboardListener(
+        child: StreamBuilder(
           stream: _timeStream,
           initialData: Duration.zero,
           builder: (BuildContext context, AsyncSnapshot<Duration> snapshot) {
-            return Text(formatDuration(snapshot.data));
-          }),
+            return Text(
+              formatDuration(snapshot.data),
+              style: TextStyle(fontSize: 30),
+            );
+          },
+        ),
+        focusNode: _node,
+        autofocus: true,
+        onKey: handleKeyPress,
+      ),
     );
   }
 }
