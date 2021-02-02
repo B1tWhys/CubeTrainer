@@ -1,9 +1,6 @@
-image: cirrusci/flutter:stable
+image: registry.gitlab.com/bouldersky/cubetrainer
 
 before_script:
-  - flutter channel beta
-  - flutter upgrade
-  - flutter config --enable-web
   - flutter pub get
 
 pages:
