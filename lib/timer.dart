@@ -14,42 +14,32 @@ class TimerWidget extends StatefulWidget {
 }
 
 class _TimerWidgetState extends State<TimerWidget> {
-  Stream<Duration> _timeStream;
+  Timer _updateTimer;
+  Stopwatch _stopwatch;
+  Duration _interval;
+  String _displayedTime;
 
-  _TimerWidgetState(Duration interval) {
-    StreamController<Duration> streamController;
-    Timer timer;
-    Stopwatch stopwatch;
+  _TimerWidgetState(this._interval);
 
-    void sendTime(_) {
-      streamController.add(stopwatch.elapsed);
-    }
+  void startTimer() {
+    _stopwatch = Stopwatch();
+    _updateTimer = Timer.periodic(_interval, update);
+  }
 
-    void startTimer() {
-      timer = Timer.periodic(interval, sendTime);
-    }
+  void stopTimer() {
+    _updateTimer.cancel();
+  }
 
-    void stopTimer() {
-      timer.cancel();
-    }
+  void update(_) {
+    setState(() {
+      _displayedTime = formatDuration(_stopwatch.elapsed);
+    });
+  }
 
-    void resetTimer() {
-      stopwatch = Stopwatch();
-      stopwatch.start();
-      sendTime(stopwatch.elapsed);
-    }
-
-    streamController = StreamController(
-      onListen: () {
-        resetTimer();
-        startTimer();
-      },
-      onPause: stopTimer,
-      onResume: startTimer,
-      onCancel: resetTimer,
-    );
-
-    _timeStream = streamController.stream;
+  @override
+  void dispose() {
+    _updateTimer?.cancel();
+    super.dispose();
   }
 
   String formatDuration(Duration d) {
@@ -61,12 +51,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: StreamBuilder(
-          stream: _timeStream,
-          initialData: Duration.zero,
-          builder: (BuildContext context, AsyncSnapshot<Duration> snapshot) {
-            return Text(formatDuration(snapshot.data));
-          }),
+      child: Text(_displayedTime),
     );
   }
 }
