@@ -9,6 +9,7 @@ before_script:
 pages:
   stage: deploy
   script:
+    - mv web/index_gitlab.html web/index.html
     - flutter build web
     - cp -r build/web public
   artifacts:
