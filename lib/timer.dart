@@ -23,10 +23,10 @@ class _TimerWidgetState extends State<TimerWidget> {
   Duration _interval;
   String _displayedTime = "0.000";
   FocusNode _node;
-  SolvePhase _solvePhase$ = SolvePhase.preSolve;
   SolveState globalSolveState;
   Color textColor = Colors.black;
 
+  SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
     print("solve phase transition: ${_solvePhase$} -> $solvePhase");
     _solvePhase$ = solvePhase;
@@ -123,16 +123,18 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: RawKeyboardListener(
-        child: Text(
-          _displayedTime,
-          style: TextStyle(fontSize: 80, color: textColor),
+    return Column(
+      children: [
+        RawKeyboardListener(
+          child: Text(
+            _displayedTime,
+            style: TextStyle(fontSize: 80, color: textColor),
+          ),
+          focusNode: _node,
+          autofocus: true,
+          onKey: handleKeyPress,
         ),
-        focusNode: _node,
-        autofocus: true,
-        onKey: handleKeyPress,
-      ),
+      ],
     );
   }
 }
