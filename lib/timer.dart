@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cubetrainer/timerState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +15,7 @@ class TimerWidget extends StatefulWidget {
   _TimerWidgetState createState() => _TimerWidgetState(interval);
 }
 
-enum Status { paused, running }
+enum SolvePhase { preSolve, pendingStart, solving, solveCompleted }
 
 class _TimerWidgetState extends State<TimerWidget> {
   Timer _updateTimer;
@@ -22,7 +23,16 @@ class _TimerWidgetState extends State<TimerWidget> {
   Duration _interval;
   String _displayedTime = "0.000";
   FocusNode _node;
-  Status status = Status.paused;
+  SolvePhase _solvePhase$ = SolvePhase.preSolve;
+  SolveState globalSolveState;
+  Color textColor = Colors.black;
+
+  set _solvePhase(SolvePhase solvePhase) {
+    print("solve phase transition: ${_solvePhase$} -> $solvePhase");
+    _solvePhase$ = solvePhase;
+  }
+
+  SolvePhase get _solvePhase => _solvePhase$;
 
   _TimerWidgetState(this._interval);
 
@@ -50,36 +60,62 @@ class _TimerWidgetState extends State<TimerWidget> {
     return "$sec.$ms";
   }
 
-  void startTimer() {
+  void setTextColor(Color c) {
+    setState(() => textColor = c);
+  }
+
+  void pendStart() async {
+    _solvePhase = SolvePhase.pendingStart;
+    setTextColor(Colors.red);
+    _updateTimer = Timer(Duration(milliseconds: 250), () {
+      // TODO: update global state
+      print("pending start completed");
+      setTextColor(Colors.green);
+    });
+  }
+
+  void startSolve() {
+    if (_updateTimer?.isActive ?? false) _updateTimer.cancel();
+    _updateTimer = Timer.periodic(_interval, update);
+    _solvePhase = SolvePhase.solving;
     _stopwatch.reset();
     _stopwatch.start();
-    _updateTimer = Timer.periodic(_interval, update);
-    status = Status.running;
   }
 
-  void pauseTimer() {
-    _updateTimer.cancel();
-    status = Status.paused;
+  void endSolve() {
     _stopwatch.stop();
-  }
-
-  void resetTimer() {
-    _stopwatch.reset();
+    _updateTimer.cancel();
+    update(null);
+    _solvePhase = SolvePhase.solveCompleted;
+    // TODO: update global state
   }
 
   void handleKeyPress(RawKeyEvent event) {
-    if (!(event is RawKeyUpEvent)) return;
-
-    switch (status) {
-      case Status.paused:
-        {
-          resetTimer();
-          startTimer();
+    switch (_solvePhase) {
+      case SolvePhase.preSolve:
+        if (event.logicalKey != LogicalKeyboardKey.space) return;
+        pendStart();
+        break;
+      case SolvePhase.pendingStart:
+        if (event.logicalKey != LogicalKeyboardKey.space ||
+            event is! RawKeyUpEvent) return;
+        if (textColor == Colors.red) {
+          print("aborting solve due to premature space release");
+          setTextColor(Colors.black);
+          _solvePhase = SolvePhase.preSolve;
+          _updateTimer?.cancel();
+        } else {
+          startSolve();
         }
         break;
-      case Status.running:
-        {
-          pauseTimer();
+      case SolvePhase.solving:
+        endSolve();
+        setTextColor(Colors.red);
+        break;
+      case SolvePhase.solveCompleted:
+        if (event is RawKeyUpEvent) {
+          setTextColor(Colors.black);
+          _solvePhase = SolvePhase.preSolve;
         }
         break;
     }
@@ -91,7 +127,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       child: RawKeyboardListener(
         child: Text(
           _displayedTime,
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 80, color: textColor),
         ),
         focusNode: _node,
         autofocus: true,
