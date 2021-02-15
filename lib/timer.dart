@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cubetrainer/scrambler.dart';
 import 'package:cubetrainer/timerState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 // reference: https://medium.com/analytics-vidhya/build-a-simple-stopwatch-in-flutter-a1f21cfcd7a8
 class TimerWidget extends StatefulWidget {
@@ -23,8 +25,9 @@ class _TimerWidgetState extends State<TimerWidget> {
   Duration _interval;
   String _displayedTime = "0.000";
   FocusNode _node;
-  SolveState globalSolveState;
   Color textColor = Colors.black;
+  SolveState globalSolveState;
+  ScrambleGenerator scrambler;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
@@ -69,6 +72,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     setTextColor(Colors.red);
     _updateTimer = Timer(Duration(milliseconds: 250), () {
       // TODO: update global state
+      globalSolveState.setSolving();
       print("pending start completed");
       setTextColor(Colors.green);
     });
@@ -88,6 +92,8 @@ class _TimerWidgetState extends State<TimerWidget> {
     update(null);
     _solvePhase = SolvePhase.solveCompleted;
     // TODO: update global state
+    scrambler.generateNewScramble();
+    globalSolveState.setSolved();
   }
 
   void handleKeyPress(RawKeyEvent event) {
@@ -123,18 +129,16 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RawKeyboardListener(
-          child: Text(
-            _displayedTime,
-            style: TextStyle(fontSize: 80, color: textColor),
-          ),
-          focusNode: _node,
-          autofocus: true,
-          onKey: handleKeyPress,
-        ),
-      ],
+    scrambler = Provider.of<ScrambleGenerator>(context, listen: false);
+    globalSolveState = Provider.of<SolveState>(context, listen: false);
+    return RawKeyboardListener(
+      child: Text(
+        _displayedTime,
+        style: TextStyle(fontSize: 80, color: textColor),
+      ),
+      focusNode: _node,
+      autofocus: true,
+      onKey: handleKeyPress,
     );
   }
 }

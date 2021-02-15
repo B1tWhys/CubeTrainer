@@ -12,7 +12,7 @@ class SolveState extends ChangeNotifier {
     this._status = status;
   }
 
-  CubeStatus currentStatus() {
+  CubeStatus get currentStatus {
     return _status;
   }
 
