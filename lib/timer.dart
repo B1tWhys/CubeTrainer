@@ -123,18 +123,14 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        RawKeyboardListener(
-          child: Text(
-            _displayedTime,
-            style: TextStyle(fontSize: 80, color: textColor),
-          ),
-          focusNode: _node,
-          autofocus: true,
-          onKey: handleKeyPress,
-        ),
-      ],
+    return RawKeyboardListener(
+      child: Text(
+        _displayedTime,
+        style: TextStyle(fontSize: 80, color: textColor),
+      ),
+      focusNode: _node,
+      autofocus: true,
+      onKey: handleKeyPress,
     );
   }
 }

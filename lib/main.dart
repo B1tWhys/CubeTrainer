@@ -1,5 +1,9 @@
+import 'package:cubetrainer/scrambleWidget.dart';
+import 'package:cubetrainer/scrambler.dart';
 import 'package:cubetrainer/timer.dart';
+import 'package:cubetrainer/timerState.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,7 +40,18 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: TimerWidget(),
+        child: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => SolveState()),
+            ChangeNotifierProvider(create: (context) => ScrambleGenerator())
+          ],
+          builder: (context, _) => Column(
+            children: [
+              TimerWidget(),
+              ScrambleWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }
