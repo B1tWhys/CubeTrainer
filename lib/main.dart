@@ -47,9 +47,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
           builder: (context, _) => Column(
             children: [
-              TimerWidget(),
               ScrambleWidget(),
+              TimerWidget(),
             ],
+            mainAxisAlignment: MainAxisAlignment.center,
           ),
         ),
       ),
