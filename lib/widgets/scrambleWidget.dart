@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cubetrainer/timerState.dart';
-import 'package:cubetrainer/scrambler.dart';
+import 'package:cubetrainer/model/timerState.dart';
+import 'package:cubetrainer/model/scrambler.dart';
 
 class ScrambleWidget extends StatelessWidget {
   const ScrambleWidget({Key key}) : super(key: key);
