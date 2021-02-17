@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => SolveState()),
-            ChangeNotifierProvider(create: (context) => ScrambleGenerator())
+            ChangeNotifierProvider(create: (context) => Scrambler())
           ],
           builder: (context, _) => Column(
             children: [

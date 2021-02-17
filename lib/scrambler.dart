@@ -32,7 +32,7 @@ class Move {
   }
 }
 
-class ScrambleGenerator extends ChangeNotifier {
+class Scrambler extends ChangeNotifier {
   String _currentScramble = _genScramble(15);
   String get currentScramble => _currentScramble;
   String _prevScramble;

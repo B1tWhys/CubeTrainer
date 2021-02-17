@@ -27,7 +27,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   FocusNode _node;
   Color textColor = Colors.black;
   SolveState globalSolveState;
-  ScrambleGenerator scrambler;
+  Scrambler scrambler;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
@@ -129,7 +129,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    scrambler = Provider.of<ScrambleGenerator>(context, listen: false);
+    scrambler = Provider.of<Scrambler>(context, listen: false);
     globalSolveState = Provider.of<SolveState>(context, listen: false);
     return RawKeyboardListener(
       child: Text(

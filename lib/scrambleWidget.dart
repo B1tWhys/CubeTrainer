@@ -8,7 +8,7 @@ class ScrambleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ScrambleGenerator>(
+    return Consumer<Scrambler>(
       builder: (context, scrambler, _) {
         return Consumer<SolveState>(builder: (context, solveState, _) {
           switch (solveState.currentStatus) {
