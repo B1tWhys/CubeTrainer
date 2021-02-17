@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 enum Face { L, R, U, D, F, B }
 

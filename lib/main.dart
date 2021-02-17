@@ -1,5 +1,7 @@
 import 'package:cubetrainer/model/scrambler.dart';
+import 'package:cubetrainer/model/settings.dart';
 import 'package:cubetrainer/model/timerState.dart';
+import 'package:cubetrainer/widgets/settingsWidget.dart';
 import 'package:cubetrainer/widgets/timerWidget.dart';
 import 'package:cubetrainer/widgets/scrambleWidget.dart';
 import 'package:flutter/material.dart';
@@ -35,23 +37,27 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => SolveState()),
-            ChangeNotifierProvider(create: (context) => Scrambler())
-          ],
-          builder: (context, _) => Column(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SolveState()),
+        ChangeNotifierProvider(create: (context) => Scrambler()),
+        Provider(create: (context) => Settings())
+      ],
+      builder: (context, _) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
             children: [
               ScrambleWidget(),
               TimerWidget(),
             ],
             mainAxisAlignment: MainAxisAlignment.center,
           ),
+        ),
+        drawer: Drawer(
+          child: SettingsWidget(),
         ),
       ),
     );
