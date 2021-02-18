@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 enum Face { L, R, U, D, F, B }
 
@@ -59,6 +58,5 @@ class Scrambler extends ChangeNotifier {
   void generateNewScramble([int scrambleLen = 15]) {
     _prevScramble = _currentScramble;
     _currentScramble = _genScramble(scrambleLen);
-    notifyListeners();
   }
 }

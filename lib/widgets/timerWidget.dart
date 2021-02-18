@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:cubetrainer/scrambler.dart';
-import 'package:cubetrainer/timerState.dart';
+import 'package:cubetrainer/model/scrambler.dart';
+import 'package:cubetrainer/model/timerState.dart';
+import 'package:cubetrainer/model/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   FocusNode _node;
   Color textColor = Colors.black;
   SolveState globalSolveState;
+  Settings settings;
   Scrambler scrambler;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
@@ -71,7 +73,6 @@ class _TimerWidgetState extends State<TimerWidget> {
     _solvePhase = SolvePhase.pendingStart;
     setTextColor(Colors.red);
     _updateTimer = Timer(Duration(milliseconds: 250), () {
-      // TODO: update global state
       globalSolveState.setSolving();
       print("pending start completed");
       setTextColor(Colors.green);
@@ -91,8 +92,6 @@ class _TimerWidgetState extends State<TimerWidget> {
     _updateTimer.cancel();
     update(null);
     _solvePhase = SolvePhase.solveCompleted;
-    // TODO: update global state
-    scrambler.generateNewScramble();
     globalSolveState.setSolved();
   }
 
