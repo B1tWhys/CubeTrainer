@@ -18,12 +18,12 @@ pages:
 
 script:
   stage: alert
-  image: byrnedo/alpine-curl
+  image: ubuntu:latest
   script:
     - > 
-      curl -v -X POST \
-      https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V \
-      -H "Content-Type: application/json" \
+      curl -v -X POST 
+      https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V
+      -H "Content-Type: application/json" 
       --data '{"content": "New Cube Trainer version has been deployed!"}'
   only:
     - master
