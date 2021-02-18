@@ -1,16 +1,27 @@
 image: registry.gitlab.com/bouldersky/cubetrainer
 
-before_script:
-  - flutter pub get
+stages:
+  - deploy
+  - alert
 
 pages:
   stage: deploy
   script:
+    - flutter pub get
     - mv web/index_gitlab.html web/index.html
     - flutter build web
     - cp -r build/web public
   artifacts:
     paths:
       - public
+  only:
+    - master
+
+script:
+  stage: alert
+  script:
+    - > 
+        curl -X POST https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V
+        --data '{"content": "New Cube Trainer version has been deployed!"}
   only:
     - master
