@@ -21,7 +21,9 @@ script:
   stage: alert
   script:
     - > 
-        curl -X POST https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V
-        --data '{"content": "New Cube Trainer version has been deployed!"}'
+      curl -v -X POST \
+      https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V \
+      -H "Content-Type: application/json" \
+      --data '{"content": "New Cube Trainer version has been deployed!"}'
   only:
     - master
