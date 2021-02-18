@@ -5,47 +5,37 @@ import 'package:provider/provider.dart';
 class SettingsWidget extends StatelessWidget {
   const SettingsWidget({Key key}) : super(key: key);
 
-  Widget intInputWidget(
-          Function(Object) callback, String settingName, int currentValue) =>
-      Expanded(
+  Widget intInputWidget(Setting<int> setting) => Expanded(
         child: TextFormField(
-          initialValue: currentValue.toString(),
-          onChanged: (String newValue) => callback(int.parse(newValue)),
+          initialValue: setting.value.toString(),
+          onChanged: (String newValue) {
+            try {
+              setting.value = int.parse(newValue);
+            } on FormatException {
+              return;
+            }
+          },
           keyboardType: TextInputType.number,
           textAlign: TextAlign.right,
         ),
       );
 
-  Widget boolInputWidget(
-          Function(Object) callback, String settingName, bool currentValue) =>
-      Align(
+  Widget boolInputWidget(Setting<bool> setting) => Align(
         child: Switch(
-          value: currentValue,
-          onChanged: callback,
+          value: setting.value,
+          onChanged: (bool newValue) => setting.value = newValue,
         ),
         alignment: Alignment.centerRight,
       );
 
-  Widget floatInputWidget(
-          Function(Object) callback, String settingName, double currentValue) =>
-      Expanded(
-        child: TextFormField(
-          initialValue: currentValue.toString(),
-          textAlign: TextAlign.right,
-          onChanged: (String newValue) => callback(double.parse(newValue)),
-        ),
-      );
-
-  Widget settingWidget(Function(Object) callback, Setting setting) {
+  Widget settingWidget(Setting setting) {
     Widget inputWidget;
     switch (setting.value.runtimeType) {
       case int:
-        inputWidget =
-            intInputWidget(callback, setting.displayName, setting.value);
+        inputWidget = intInputWidget(setting);
         break;
       case bool:
-        inputWidget =
-            boolInputWidget(callback, setting.displayName, setting.value);
+        inputWidget = boolInputWidget(setting);
         break;
       default:
         return Container(
@@ -69,16 +59,18 @@ class SettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Settings>(builder: (context, settings, _) {
-      return ListView(
-        children: settings.entries
-            .map((MapEntry e) => settingWidget(
-                  (Object newVal) => settings[e.key] = newVal,
-                  e.value,
-                ))
-            .toList(),
-        padding: EdgeInsets.all(10),
-      );
-    });
+    Settings settings = Provider.of<Settings>(context);
+    return ListView(
+      children: settings.settings.entries.map((MapEntry<String, Setting> e) {
+        Setting setting = e.value;
+        return ChangeNotifierProvider.value(
+          value: setting,
+          child: Consumer<Setting>(
+            builder: (_, setting, child) => settingWidget(setting),
+          ),
+        );
+      }).toList(),
+      padding: EdgeInsets.all(10),
+    );
   }
 }

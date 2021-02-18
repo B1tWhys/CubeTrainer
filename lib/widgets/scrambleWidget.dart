@@ -9,22 +9,27 @@ class ScrambleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Scrambler scrambler = Provider.of<Scrambler>(context);
-    Settings settings = Provider.of<Settings>(context);
-    return Consumer<SolveState>(builder: (context, solveState, _) {
-      switch (solveState.currentStatus) {
-        case CubeStatus.SCRAMBLING:
-          scrambler.generateNewScramble(settings["scrambleLen"].value);
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              scrambler.currentScramble,
-              style: TextStyle(fontSize: 30),
-            ),
-          );
-        default:
-          return Container();
-      }
-    });
+    Setting scrambleLenSetting =
+        Provider.of<Settings>(context).settings['scrambleLen'];
+    return ChangeNotifierProvider.value(
+      value: scrambleLenSetting,
+      child: Consumer3<SolveState, Scrambler, Setting>(
+          builder: (context, solveState, scrambler, scrambleLenSetting, _) {
+        switch (solveState.currentStatus) {
+          case CubeStatus.SCRAMBLING:
+            scrambler.generateNewScramble(scrambleLenSetting.value);
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                scrambler.currentScramble,
+                style: TextStyle(fontSize: 30),
+                textAlign: TextAlign.center,
+              ),
+            );
+          default:
+            return Container();
+        }
+      }),
+    );
   }
 }
