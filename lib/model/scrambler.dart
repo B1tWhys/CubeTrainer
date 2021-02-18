@@ -58,6 +58,5 @@ class Scrambler extends ChangeNotifier {
   void generateNewScramble([int scrambleLen = 15]) {
     _prevScramble = _currentScramble;
     _currentScramble = _genScramble(scrambleLen);
-    notifyListeners();
   }
 }

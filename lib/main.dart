@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
       providers: [
         ChangeNotifierProvider(create: (context) => SolveState()),
         ChangeNotifierProvider(create: (context) => Scrambler()),
-        Provider(create: (context) => Settings())
+        ChangeNotifierProvider(create: (context) => Settings())
       ],
       builder: (context, _) => Scaffold(
         appBar: AppBar(
