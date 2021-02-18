@@ -1,11 +1,10 @@
-image: registry.gitlab.com/bouldersky/cubetrainer
-
 stages:
   - deploy
   - alert
 
 pages:
   stage: deploy
+  image: registry.gitlab.com/bouldersky/cubetrainer
   script:
     - flutter pub get
     - mv web/index_gitlab.html web/index.html
@@ -19,6 +18,7 @@ pages:
 
 script:
   stage: alert
+  image: byrnedo/alpine-curl
   script:
     - > 
       curl -v -X POST \
