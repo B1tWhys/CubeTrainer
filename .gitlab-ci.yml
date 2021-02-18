@@ -20,8 +20,8 @@ script:
   stage: alert
   image: ubuntu:latest
   script:
-    - apt update
-    - apt install curl
+    - apt update -y
+    - apt install -y curl
     - > 
       curl -v -X POST 
       https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V
