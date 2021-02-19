@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cubetrainer/model/scrambler.dart';
+import 'package:cubetrainer/model/solve.dart';
+import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:cubetrainer/model/settings.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   SolveState globalSolveState;
   Settings settings;
   Scrambler scrambler;
+  SolveHistory solveHistory;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
@@ -41,11 +44,9 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   _TimerWidgetState(this._interval);
 
-  void update(_) {
-    setState(() {
-      _displayedTime = formatDuration(_stopwatch.elapsed);
-    });
-  }
+  void update() => setState(() {
+        _displayedTime = formatDuration(_stopwatch.elapsed);
+      });
 
   @override
   void dispose() {
@@ -81,7 +82,7 @@ class _TimerWidgetState extends State<TimerWidget> {
 
   void startSolve() {
     if (_updateTimer?.isActive ?? false) _updateTimer.cancel();
-    _updateTimer = Timer.periodic(_interval, update);
+    _updateTimer = Timer.periodic(_interval, (_) => update());
     _solvePhase = SolvePhase.solving;
     _stopwatch.reset();
     _stopwatch.start();
@@ -90,9 +91,12 @@ class _TimerWidgetState extends State<TimerWidget> {
   void endSolve() {
     _stopwatch.stop();
     _updateTimer.cancel();
-    update(null);
+    update();
     _solvePhase = SolvePhase.solveCompleted;
     globalSolveState.setSolved();
+    Solve solve =
+        Solve([_stopwatch.elapsed], DateTime.now(), scrambler.currentScramble);
+    solveHistory.add(solve);
   }
 
   void handleKeyPress(RawKeyEvent event) {
@@ -130,6 +134,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     scrambler = Provider.of<Scrambler>(context, listen: false);
     globalSolveState = Provider.of<SolveState>(context, listen: false);
+    solveHistory = Provider.of<SolveHistory>(context, listen: false);
     return RawKeyboardListener(
       child: Text(
         _displayedTime,
