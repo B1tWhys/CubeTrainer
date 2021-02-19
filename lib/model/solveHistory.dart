@@ -4,7 +4,7 @@ import 'solve.dart';
 
 class SolveHistory extends ChangeNotifier {
   List<Solve> solves = [
-    Solve([Duration(seconds: 30)], DateTime.now(), "ABCD")
+    // Solve([Duration(seconds: 30)], DateTime.now(), "ABCD")
   ];
 
   void add(Solve solve) {

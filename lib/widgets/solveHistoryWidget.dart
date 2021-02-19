@@ -3,6 +3,7 @@ import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class SolveHistoryWidget extends StatelessWidget {
   const SolveHistoryWidget({Key key}) : super(key: key);
@@ -34,11 +35,14 @@ class SolveHistoryWidget extends StatelessWidget {
 }
 
 class SolveHistoryRow extends StatelessWidget {
-  final Solve solve;
   const SolveHistoryRow(this.solve, {Key key}) : super(key: key);
+  final Solve solve;
 
   @override
   Widget build(BuildContext context) {
+    const TextStyle style = TextStyle(fontSize: 20);
+    final DateFormat dateFormat = DateFormat.yMd().add_jms();
+
     return Container(
       color: Color.fromARGB(255, 220, 220, 220),
       child: Padding(
@@ -46,10 +50,17 @@ class SolveHistoryRow extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              solve.timestamp.toIso8601String(),
-              style: TextStyle(fontSize: 20),
+              dateFormat.format(solve.timestamp),
+              style: style,
             ),
+            Text(
+              solve.scramble,
+              style: style,
+              textAlign: TextAlign.center,
+            ),
+            Text(solve.total.toString(), style: style)
           ],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ),
       ),
     );
