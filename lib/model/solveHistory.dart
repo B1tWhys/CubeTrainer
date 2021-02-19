@@ -8,7 +8,7 @@ class SolveHistory extends ChangeNotifier {
   ];
 
   void add(Solve solve) {
-    solves.add(solve);
+    solves.insert(0, solve);
     notifyListeners();
   }
 }
