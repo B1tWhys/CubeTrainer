@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 
 import 'solve.dart';
 
-class InMemorySolveHistoryImpl extends ChangeNotifier implements SolveHistory {
+class InMemorySolveHistoryImpl
+    with ChangeNotifier
+    implements SolveHistoryInterface {
   List<Solve> solves = [
     // Solve([Duration(seconds: 30)], DateTime.now(), "ABCD")
   ];

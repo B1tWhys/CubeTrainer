@@ -1,6 +1,7 @@
 import 'solve.dart';
+import 'package:flutter/foundation.dart';
 
-abstract class SolveHistory {
+abstract class SolveHistoryInterface with ChangeNotifier {
   List<Solve> solves;
   void add(Solve solve);
 }

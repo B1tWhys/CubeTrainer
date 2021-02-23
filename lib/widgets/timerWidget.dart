@@ -135,7 +135,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     scrambler = Provider.of<Scrambler>(context, listen: false);
     globalSolveState = Provider.of<SolveState>(context, listen: false);
-    solveHistory = Provider.of<SolveHistory>(context, listen: false);
+    solveHistory = Provider.of<SolveHistoryInterface>(context, listen: false);
     return RawKeyboardListener(
       child: Text(
         _displayedTime,
