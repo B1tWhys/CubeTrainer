@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/solve.dart';
+import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:cubetrainer/model/settings.dart';
@@ -32,7 +33,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   SolveState globalSolveState;
   Settings settings;
   Scrambler scrambler;
-  SolveHistory solveHistory;
+  InMemorySolveHistoryImpl solveHistory;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {

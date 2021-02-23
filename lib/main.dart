@@ -1,6 +1,6 @@
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/settings.dart';
-import 'package:cubetrainer/model/solveHistory.dart';
+import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:cubetrainer/widgets/settingsWidget.dart';
 import 'package:cubetrainer/widgets/solveHistoryWidget.dart';
@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ChangeNotifierProvider(create: (context) => SolveState()),
         ChangeNotifierProvider(create: (context) => Scrambler()),
         Provider(create: (context) => Settings()),
-        ChangeNotifierProvider(create: (_) => SolveHistory()),
+        ChangeNotifierProvider(create: (_) => InMemorySolveHistoryImpl()),
       ],
       builder: (context, _) => Scaffold(
         appBar: AppBar(
