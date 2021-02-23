@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
 class Solve {
   List<Duration> splits;
   Duration get total => splits.reduce((value, element) => value += element);
