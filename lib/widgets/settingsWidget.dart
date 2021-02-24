@@ -1,4 +1,5 @@
 import 'package:cubetrainer/model/settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,15 +62,22 @@ class SettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Settings settings = Provider.of<Settings>(context);
     return ListView(
-      children: settings.settings.entries.map((MapEntry<String, Setting> e) {
-        Setting setting = e.value;
-        return ChangeNotifierProvider.value(
-          value: setting,
-          child: Consumer<Setting>(
-            builder: (_, setting, child) => settingWidget(setting),
-          ),
-        );
-      }).toList(),
+      children: [
+        ...settings.settings.entries.map((MapEntry<String, Setting> e) {
+          Setting setting = e.value;
+          return ChangeNotifierProvider.value(
+            value: setting,
+            child: Consumer<Setting>(
+              builder: (_, setting, child) => settingWidget(setting),
+            ),
+          );
+        }).toList(),
+        Divider(),
+        OutlinedButton(
+          onPressed: () => FirebaseAuth.instance.signOut(),
+          child: Text("Sign out"),
+        ),
+      ],
       padding: EdgeInsets.all(10),
     );
   }
