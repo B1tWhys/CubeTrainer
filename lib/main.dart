@@ -1,20 +1,17 @@
-import 'package:cubetrainer/model/scrambler.dart';
-import 'package:cubetrainer/model/settings.dart';
-import 'package:cubetrainer/model/solveHistory.dart';
-import 'package:cubetrainer/model/timerState.dart';
-import 'package:cubetrainer/widgets/settingsWidget.dart';
-import 'package:cubetrainer/widgets/solveHistoryWidget.dart';
-import 'package:cubetrainer/widgets/timerWidget.dart';
-import 'package:cubetrainer/widgets/scrambleWidget.dart';
+import 'package:cubetrainer/widgets/authWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'screens/homeScreen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(CubeTimer());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class CubeTimer extends StatelessWidget {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,55 +19,26 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Cube Timer'),
-    );
-  }
-}
+      home: FutureBuilder(
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Something went wrong. Please refresh\n:/",
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MyHomePage(title: "Cube Timer");
+          }
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  Widget _warning() => Text(
-        "CAUTION:\nsolve history is not currently saved between reloads!\n(i'll be adding that tomorrowish :)",
-        style: TextStyle(fontSize: 30, color: Colors.red),
-        textAlign: TextAlign.center,
-      );
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => SolveState()),
-        ChangeNotifierProvider(create: (context) => Scrambler()),
-        Provider(create: (context) => Settings()),
-        ChangeNotifierProvider(create: (_) => SolveHistory()),
-      ],
-      builder: (context, _) => Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              _warning(),
-              Spacer(),
-              ScrambleWidget(),
-              TimerWidget(),
-              SolveHistoryWidget(),
-            ],
-            mainAxisAlignment: MainAxisAlignment.center,
-          ),
-        ),
-        drawer: Drawer(
-          child: SettingsWidget(),
-        ),
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        future: _initialization,
       ),
     );
   }

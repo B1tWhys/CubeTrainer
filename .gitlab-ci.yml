@@ -8,6 +8,7 @@ pages:
   script:
     - flutter pub get
     - mv web/index_gitlab.html web/index.html
+    - flutter pub run build_runner build 
     - flutter build web
     - cp -r build/web public
   artifacts:

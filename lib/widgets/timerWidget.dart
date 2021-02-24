@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/solve.dart';
+import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:cubetrainer/model/settings.dart';
@@ -32,7 +33,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   SolveState globalSolveState;
   Settings settings;
   Scrambler scrambler;
-  SolveHistory solveHistory;
+  InMemorySolveHistoryImpl solveHistory;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
@@ -134,7 +135,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     scrambler = Provider.of<Scrambler>(context, listen: false);
     globalSolveState = Provider.of<SolveState>(context, listen: false);
-    solveHistory = Provider.of<SolveHistory>(context, listen: false);
+    solveHistory = Provider.of<SolveHistoryInterface>(context, listen: false);
     return RawKeyboardListener(
       child: Text(
         _displayedTime,

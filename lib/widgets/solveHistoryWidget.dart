@@ -1,3 +1,4 @@
+import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/solve.dart';
 import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
@@ -10,7 +11,7 @@ class SolveHistoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<SolveHistory, SolveState>(
+    return Consumer2<SolveHistoryInterface, SolveState>(
       builder: (_, solveHistory, solveState, __) {
         if (solveState.currentStatus == CubeStatus.SCRAMBLING) {
           return Expanded(
