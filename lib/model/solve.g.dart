@@ -15,10 +15,12 @@ Solve _$SolveFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['timestamp'] as String),
     json['scramble'] as String,
+    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$SolveToJson(Solve instance) => <String, dynamic>{
+      'id': instance.id,
       'splits': instance.splits?.map((e) => e?.inMicroseconds)?.toList(),
       'timestamp': instance.timestamp?.toIso8601String(),
       'scramble': instance.scramble,

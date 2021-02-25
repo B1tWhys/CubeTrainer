@@ -10,9 +10,41 @@ class FirestoreSolveHistoryImpl
   @override
   List<Solve> solves = [];
 
+  Stream<QuerySnapshot> _solveStream;
+
+  FirestoreSolveHistoryImpl() {
+    FirebaseAuth.instance.authStateChanges().listen(
+      (User u) {
+        if (u == null) {
+          solves = [];
+          notifyListeners();
+          return;
+        }
+
+        String uid = FirebaseAuth.instance.currentUser.uid;
+        _solveStream = FirebaseFirestore.instance
+            .collection('users/$uid/solves')
+            .orderBy("timestamp", descending: true)
+            .snapshots();
+
+        _solveStream.listen(
+          (QuerySnapshot snapshot) {
+            List<QueryDocumentSnapshot> docs = snapshot.docs;
+            print(docs.map((e) => e.data()));
+            solves = docs.where((e) => e.exists).map((e) {
+              print("data: ${e.data()}");
+              return Solve.fromJson(e.data());
+            }).toList();
+            notifyListeners();
+          },
+        );
+      },
+    );
+  }
+
   @override
   void add(Solve solve) {
-    print("adding solve to firestore");
+    print("adding solve to firestore: ${solve.toJson()}");
     String uid = FirebaseAuth.instance.currentUser.uid;
     CollectionReference user =
         FirebaseFirestore.instance.collection('users/$uid/solves');

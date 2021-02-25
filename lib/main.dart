@@ -9,8 +9,8 @@ void main() {
 }
 
 class CubeTimer extends StatelessWidget {
-  final Future _initialization = Firebase.initializeApp()
-      .then((value) => FirebaseFirestore.instance.enablePersistence());
+  final Future _initialization = Firebase.initializeApp();
+  // .then((value) => FirebaseFirestore.instance.enablePersistence());
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
