@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,8 @@ void main() {
 }
 
 class CubeTimer extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final Future _initialization = Firebase.initializeApp()
+      .then((value) => FirebaseFirestore.instance.enablePersistence());
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override

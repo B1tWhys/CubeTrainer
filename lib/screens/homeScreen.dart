@@ -1,3 +1,4 @@
+import 'package:cubetrainer/model/firestoreSolveHistoryImpl.dart';
 import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/settings.dart';
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ChangeNotifierProvider(create: (context) => Scrambler()),
         Provider(create: (_) => Settings()),
         ChangeNotifierProvider<SolveHistoryInterface>(
-            create: (_) => InMemorySolveHistoryImpl()),
+            create: (_) => FirestoreSolveHistoryImpl()),
       ],
     );
   }

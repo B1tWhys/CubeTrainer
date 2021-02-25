@@ -33,7 +33,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   SolveState globalSolveState;
   Settings settings;
   Scrambler scrambler;
-  InMemorySolveHistoryImpl solveHistory;
+  SolveHistoryInterface solveHistory;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
