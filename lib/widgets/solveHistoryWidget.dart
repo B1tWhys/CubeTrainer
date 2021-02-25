@@ -45,7 +45,6 @@ class SolveHistoryRow extends StatelessWidget {
     final DateFormat dateFormat = DateFormat.yMd().add_jms();
 
     return Container(
-      color: Color.fromARGB(255, 220, 220, 220),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
         child: Row(
