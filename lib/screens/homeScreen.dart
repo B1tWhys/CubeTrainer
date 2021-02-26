@@ -42,22 +42,28 @@ class _MyHomePageState extends State<MyHomePage> {
     return TimerScreen();
   }
 
+  void showSettings(BuildContext context, Settings settings) =>
+      showDialog(context: context, builder: (_) => SettingsDialog(settings));
+
   @override
   Widget build(BuildContext context) {
+    Settings settings = Settings();
     return MultiProvider(
       builder: (context, _) => Scaffold(
         appBar: AppBar(title: Text(widget.title)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.settings),
+          onPressed: () => showSettings(context, settings),
+        ),
         body: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: buildScreen),
-        drawer: Drawer(
-          child: SettingsWidget(),
-        ),
       ),
       providers: [
         ChangeNotifierProvider(create: (context) => SolveState()),
         ChangeNotifierProvider(create: (context) => Scrambler()),
-        Provider(create: (_) => Settings()),
+        Provider.value(value: settings),
         ChangeNotifierProvider<SolveHistoryInterface>(
             create: (_) => FirestoreSolveHistoryImpl()),
       ],
