@@ -1,6 +1,5 @@
 stages:
   - deploy
-  - alert
 
 pages:
   stage: deploy
@@ -14,19 +13,5 @@ pages:
   artifacts:
     paths:
       - public
-  only:
-    - master
-
-script:
-  stage: alert
-  image: ubuntu:latest
-  script:
-    - apt update -y
-    - apt install -y curl
-    - > 
-      curl -v -X POST 
-      https://discordapp.com/api/webhooks/811820976710221874/JJLbx-N1e07cXN9waPALEJxN7FVH1LEEC9_8pCo9KQfbfJFJIO6tHFI6aslFe9H2A26V
-      -H "Content-Type: application/json" 
-      --data '{"content": "New Cube Timer version has been deployed!"}'
   only:
     - master
