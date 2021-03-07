@@ -1,5 +1,4 @@
 import 'package:cubetrainer/model/firestoreSolveHistoryImpl.dart';
-import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/settings.dart';
 import 'package:cubetrainer/model/solveHistory.dart';
@@ -35,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ).whenComplete(() => _signInVisible = false));
     } else if (authStateSnapshot.data != null && _signInVisible) {
       _signInVisible = false;
+      print("signed in as uid: ${FirebaseAuth.instance.currentUser.uid}");
       Navigator.maybePop(context);
     }
 

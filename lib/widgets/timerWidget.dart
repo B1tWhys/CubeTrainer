@@ -103,9 +103,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     update();
     _solvePhase = SolvePhase.solveCompleted;
     globalSolveState.setSolved();
-    Solve solve =
-        Solve([_stopwatch.elapsed], DateTime.now(), scrambler.currentScramble);
-    solveHistory.add(solve);
+    solveHistory.add(this._currentSolve);
   }
 
   void handleKeyPress(RawKeyEvent event) {
@@ -129,9 +127,8 @@ class _TimerWidgetState extends State<TimerWidget> {
       case SolvePhase.solving:
         if (event is RawKeyUpEvent) return;
 
-        if (settings.settings['nSplits'].value >= _currentSolve.splits.length) {
-          split();
-        } else {
+        split();
+        if (settings.settings['nSplits'].value <= _currentSolve.splits.length) {
           endSolve();
           setTextColor(Colors.red);
         }

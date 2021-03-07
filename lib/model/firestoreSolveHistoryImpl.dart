@@ -32,9 +32,10 @@ class FirestoreSolveHistoryImpl
             List<QueryDocumentSnapshot> docs = snapshot.docs;
             print(docs.map((e) => e.data()));
             solves = docs.where((e) => e.exists).map((e) {
-              print("data: ${e.data()}");
+              // print("data: ${e.data()}");
               return Solve.fromJson(e.data());
             }).toList();
+            print("downloaded ${solves.length} solves from firestore");
             notifyListeners();
           },
         );

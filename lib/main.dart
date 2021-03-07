@@ -33,6 +33,8 @@ class CubeTimer extends StatelessWidget {
 
           return StreamBuilder(
             builder: (context, authSnapshot) {
+              print(
+                  "initConState: ${initializationSnapshot.connectionState}\nauthConState: ${authSnapshot.connectionState}");
               if (initializationSnapshot.connectionState ==
                       ConnectionState.done &&
                   authSnapshot?.connectionState != ConnectionState.waiting) {
