@@ -21,8 +21,8 @@ class CubeTimer extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder(
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
+        builder: (context, initializationSnapshot) {
+          if (initializationSnapshot.hasError) {
             return Center(
               child: Text(
                 "Something went wrong. Please refresh\n:/",
@@ -31,12 +31,19 @@ class CubeTimer extends StatelessWidget {
             );
           }
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MyHomePage(title: "Cube Timer");
-          }
-
-          return Center(
-            child: CircularProgressIndicator(),
+          return StreamBuilder(
+            builder: (context, authSnapshot) {
+              if (initializationSnapshot.connectionState ==
+                      ConnectionState.done &&
+                  authSnapshot?.connectionState != ConnectionState.waiting) {
+                return MyHomePage(title: "Cube Timer");
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+            stream: auth.authStateChanges(),
           );
         },
         future: _initialization,
