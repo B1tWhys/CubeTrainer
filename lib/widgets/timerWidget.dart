@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cubetrainer/model/scrambler.dart';
 import 'package:cubetrainer/model/solve.dart';
-import 'package:cubetrainer/model/inMemorySolveHistoryImpl.dart';
 import 'package:cubetrainer/model/solveHistory.dart';
 import 'package:cubetrainer/model/timerState.dart';
 import 'package:cubetrainer/model/settings.dart';
@@ -34,6 +33,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   Settings settings;
   Scrambler scrambler;
   SolveHistoryInterface solveHistory;
+
+  Solve _currentSolve;
 
   SolvePhase _solvePhase$ = SolvePhase.preSolve;
   set _solvePhase(SolvePhase solvePhase) {
@@ -85,9 +86,16 @@ class _TimerWidgetState extends State<TimerWidget> {
     if (_updateTimer?.isActive ?? false) _updateTimer.cancel();
     _updateTimer = Timer.periodic(_interval, (_) => update());
     _solvePhase = SolvePhase.solving;
+    _currentSolve = Solve([], DateTime.now(), scrambler.currentScramble);
     _stopwatch.reset();
     _stopwatch.start();
   }
+
+  void split() => setState(() {
+        Duration t = _stopwatch.elapsed;
+        print('split: ${t.toString()}');
+        _currentSolve.splits.add(t);
+      });
 
   void endSolve() {
     _stopwatch.stop();
@@ -119,8 +127,14 @@ class _TimerWidgetState extends State<TimerWidget> {
         }
         break;
       case SolvePhase.solving:
-        endSolve();
-        setTextColor(Colors.red);
+        if (event is RawKeyUpEvent) return;
+
+        if (settings.settings['nSplits'].value >= _currentSolve.splits.length) {
+          split();
+        } else {
+          endSolve();
+          setTextColor(Colors.red);
+        }
         break;
       case SolvePhase.solveCompleted:
         if (event is RawKeyUpEvent) {
@@ -136,6 +150,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     scrambler = Provider.of<Scrambler>(context, listen: false);
     globalSolveState = Provider.of<SolveState>(context, listen: false);
     solveHistory = Provider.of<SolveHistoryInterface>(context, listen: false);
+    settings = Provider.of<Settings>(context, listen: false);
     return RawKeyboardListener(
       child: Text(
         _displayedTime,

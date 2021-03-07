@@ -25,7 +25,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _signInVisible = false;
   Widget buildScreen(BuildContext context, AsyncSnapshot authStateSnapshot) {
-    print("auth state snapshot: ${authStateSnapshot.data}");
     if (authStateSnapshot.data == null && _signInVisible == false) {
       print("showing alert dialog");
       _signInVisible = true;
