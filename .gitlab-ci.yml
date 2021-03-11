@@ -6,7 +6,7 @@ pages:
   image: registry.gitlab.com/bouldersky/cubetrainer
   script:
     - flutter pub get
-    - mv web/index_gitlab.html web/index.html
+    # - mv web/index_gitlab.html web/index.html
     - flutter pub run build_runner build --delete-conflicting-outputs
     - flutter build web
     - cp -r build/web public
