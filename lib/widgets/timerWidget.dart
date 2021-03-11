@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-// reference: https://medium.com/analytics-vidhya/build-a-simple-stopwatch-in-flutter-a1f21cfcd7a8
 class TimerWidget extends StatefulWidget {
   final Duration interval;
   TimerWidget({
@@ -92,7 +91,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void split() => setState(() {
-        Duration t = _stopwatch.elapsed;
+        Duration t = _stopwatch.elapsed - _currentSolve.total;
         print('split: ${t.toString()}');
         _currentSolve.splits.add(t);
       });
@@ -126,7 +125,6 @@ class _TimerWidgetState extends State<TimerWidget> {
         break;
       case SolvePhase.solving:
         if (event is RawKeyUpEvent) return;
-
         split();
         if (settings.settings['nSplits'].value <= _currentSolve.splits.length) {
           endSolve();
