@@ -6,7 +6,9 @@ part 'solve.g.dart';
 class Solve {
   String id;
   List<Duration> splits;
-  Duration get total => splits.reduce((value, element) => value += element);
+  Duration get total => splits.length == 0
+      ? Duration.zero
+      : splits.reduce((value, element) => value += element);
   DateTime timestamp;
   String scramble;
 
