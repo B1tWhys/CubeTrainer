@@ -13,14 +13,45 @@ class SolveHistoryWidget extends StatelessWidget {
   String formatSplit(Duration split) =>
       (split.inMilliseconds / 1000.0).toStringAsFixed(2);
 
-  List<Widget> genSolveRow(int width, Solve solve) {
-    final DateFormat format = DateFormat.yMd().add_jms();
+  List<DataColumn> calculateColumns(List<Solve> solves) {
+    int nSplits = solves.map((s) => s.splits.length).reduce(max);
     return [
-      SolveHistoryCell(format.format(solve.timestamp)),
-      SolveHistoryCell(solve.scramble),
-      ...List.filled(width - solve.splits.length - 2, SolveHistoryCell("-")),
-      ...solve.splits.map(formatSplit).map((s) => SolveHistoryCell(s))
+      DataColumn(label: Text("Date")),
+      DataColumn(label: Text("Scramble")),
+      ...List<DataColumn>.generate(
+              nSplits, (index) => DataColumn(label: Text("Split ${index + 1}")))
+          .toList(),
+      DataColumn(label: Text("Total")),
     ];
+  }
+
+  String formatDuration(Duration d) =>
+      ((d.inMilliseconds) / 1000).toStringAsFixed(3);
+
+  DataRow dataRowForSolve(Solve solve, int nColumns) {
+    final DateFormat format = DateFormat.yMd().add_jms();
+    final List<DataCell> splitCells = solve.splits
+        .map(formatDuration)
+        .map((s) => DataCell(Text(s, textAlign: TextAlign.center)))
+        .toList();
+    final List<DataCell> fillerCells =
+        List.generate(nColumns - splitCells.length - 3, (_) => DataCell.empty);
+    final List<DataCell> cells = [
+      DataCell(Text(format.format(solve.timestamp))),
+      DataCell(LimitedBox(
+        maxWidth: 5,
+        child: Text(
+          solve.scramble,
+          overflow: TextOverflow.ellipsis,
+        ),
+      )),
+      ...fillerCells,
+      ...splitCells,
+      DataCell(Text(formatDuration(solve.total)))
+    ];
+    print("cells len: ${cells.length}");
+
+    return DataRow(cells: cells);
   }
 
   @override
@@ -30,14 +61,17 @@ class SolveHistoryWidget extends StatelessWidget {
         if (solveState?.currentStatus == CubeStatus.SCRAMBLING &&
             (solveHistory?.solves ?? []).length > 0) {
           List<Solve> solves = solveHistory.solves;
-          int gridWidth = solves.map((e) => e.splits.length).reduce(max) + 2;
+          List<DataColumn> columns = calculateColumns(solves);
           return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.count(
-                crossAxisCount: gridWidth,
-                childAspectRatio: 8,
-                children: [...solves.expand((s) => genSolveRow(gridWidth, s))],
+            child: SizedBox(
+              width: double.infinity,
+              child: SingleChildScrollView(
+                child: DataTable(
+                  columns: columns,
+                  rows: solves
+                      .map((s) => dataRowForSolve(s, columns.length))
+                      .toList(),
+                ),
               ),
             ),
           );
