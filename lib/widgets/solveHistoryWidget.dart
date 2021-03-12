@@ -45,8 +45,8 @@ class SolveHistoryWidget extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       )),
-      ...fillerCells,
       ...splitCells,
+      ...fillerCells,
       DataCell(Text(formatDuration(solve.total)))
     ];
     print("cells len: ${cells.length}");

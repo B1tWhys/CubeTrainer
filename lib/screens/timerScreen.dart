@@ -2,6 +2,7 @@ import 'package:cubetrainer/widgets/scrambleWidget.dart';
 import 'package:cubetrainer/widgets/solveHistoryWidget.dart';
 import 'package:cubetrainer/widgets/timerWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:cubetrainer/widgets/catPictureWidget.dart';
 
 class TimerScreen extends StatelessWidget {
   const TimerScreen({Key key}) : super(key: key);
@@ -11,7 +12,7 @@ class TimerScreen extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          Spacer(),
+          CatPictureWidget(),
           ScrambleWidget(),
           TimerWidget(),
           SolveHistoryWidget(),
